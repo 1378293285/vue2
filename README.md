@@ -1,4 +1,4 @@
-# vue2
+# hmnew
 
 ## Project setup
 ```
