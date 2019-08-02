@@ -28,16 +28,20 @@
                   &nbsp;
                   <span>评论:{{item.comm_count}}</span>
                   &nbsp;
-                  <span>时间:{{item.pubdate}}</span>
+                  <span>时间:{{item.pubdate | relTime}}</span>
                   &nbsp;
+                  <van-icon class="close" name="cross" @click="showMoreActionDia()"></van-icon>
                 </p>
               </template>
             </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
-
     </van-tabs>
+
+    <!-- 更多操作 -->
+    <more-action v-model="isShowMore"></more-action>
+
   </div>
 </template>
 
@@ -46,9 +50,13 @@ import { getChannelUser } from '@/api/channel'
 import { mapState } from 'vuex'
 import { getArticle } from '@/api/article'
 import { setTimeout } from 'timers'
+import MoreAction from './compoents/more-action.vue'
 
 export default {
   name: 'HomeIndex',
+  components: {
+    MoreAction
+  },
   data () {
     return {
       activeIndex: 0,
@@ -56,7 +64,8 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      isLoading: false
+      isLoading: false,
+      isShowMore: false
     }
   },
   created () {
@@ -84,6 +93,10 @@ export default {
     }
   },
   methods: {
+    // 显示更多操作的对话框
+    showMoreActionDia () {
+      this.isShowMore = true
+    },
     async loadChannels () {
       // 取本地缓存
       const lsChannels = JSON.parse(window.localStorage.getItem('channels'))

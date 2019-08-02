@@ -10,9 +10,16 @@ import 'amfe-flexible/index.min.js'
 import 'vant/lib/index.css'
 // 图片懒加载
 import VueLazyload from 'vue-lazyload'
+// 配置相对时间的插件
+import dayjs from 'dayjs'
+import relaviveTime from 'dayjs/plugin/relativeTime'
+// 设置dayjs语言样式  本地化语言包
+import 'dayjs/locale/zh-cn'
 
 // 修改语言样式
 import zhCN from 'vee-validate/dist/locale/zh_CN'
+// 拓展dayjs插件
+dayjs.extend(relaviveTime)
 
 Vue.use(VueLazyload)
 
@@ -20,6 +27,8 @@ Vue.use(Vant)
 Vue.use(VeeValidate)
 
 Validator.localize('zh_CN', zhCN)
+// 使用语言包
+dayjs.locale('zh-cn')
 
 // 自定义验证规则
 Validator.extend('photo', {
@@ -41,6 +50,11 @@ Vue.prototype.$sleep = (time) => {
     }, time)
   })
 }
+
+// 过滤器
+Vue.filter('relTime', (value) => {
+  return dayjs().from(dayjs(value))
+})
 
 Vue.config.productionTip = false
 
