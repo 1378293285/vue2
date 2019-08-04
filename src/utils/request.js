@@ -5,12 +5,22 @@
 
 import axios from 'axios'
 import store from '@/store.js'
+import JSONBig from 'json-bigint'
 
 // axios.get
 // axios.create() 返回一个和axios对象一样的对象
 const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn'
 })
+
+// 配置JSONBig包处理文章ID超限的问题
+request.defaults.transformResponse = [function (data) {
+  try {
+    return JSONBig.parse(data)
+  } catch (error) {
+    return data
+  }
+}]
 
 // 请求拦截器
 request.interceptors.request.use(function (config) {

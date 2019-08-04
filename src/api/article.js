@@ -15,3 +15,15 @@ export const getArticle = (data) => {
     params: data
   })
 }
+
+// 对文章不感兴趣
+// 参数为文章ID
+export const unLikeArticle = (articleId) => {
+  return request({
+    method: 'post',
+    url: '/app/v1_0/article/dislikes',
+    data: {
+      target: articleId
+    }
+  })
+}

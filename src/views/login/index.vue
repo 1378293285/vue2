@@ -34,7 +34,7 @@ export default {
     return {
       user: {
         // 默认手机号
-        mobile: '18801185985',
+        mobile: '13911111111',
         // 默认密码
         code: '246810'
       },

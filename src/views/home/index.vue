@@ -5,6 +5,11 @@
 
     <!-- tab栏 -->
     <van-tabs v-model="activeIndex" class="channel-tab">
+      <!-- 自定义tabs的右按钮 -->
+      <div slot='nav-right' class="wap-nav" @click="showChannelModal">
+        <van-icon name="wap-nav"></van-icon>
+      </div>
+
       <van-tab :title="item.name"
         v-for="(item) in channels"
         :key="item.id"
@@ -14,7 +19,7 @@
         <van-pull-refresh v-model="item.downPullLoading" @refresh="onRefresh">
           <!-- 是否加载完 -->
           <van-list v-model="item.upPullLoading" :finished="item.upPullFinished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="item in item.articles" :key="item.art_id" :title="item.title">
+            <van-cell v-for="item in item.articles" :key="item.art_id.toString()" :title="item.title">
               <template slot="label">
                 <van-grid
                 v-show="item.cover.type !==0"
@@ -30,7 +35,7 @@
                   &nbsp;
                   <span>时间:{{item.pubdate | relTime}}</span>
                   &nbsp;
-                  <van-icon class="close" name="cross" @click="showMoreActionDia()"></van-icon>
+                  <van-icon class="close" name="cross" @click="showMoreActionDia(item)"></van-icon>
                 </p>
               </template>
             </van-cell>
@@ -40,8 +45,10 @@
     </van-tabs>
 
     <!-- 更多操作 -->
-    <more-action v-model="isShowMore"></more-action>
+    <more-action :currentArticle="currentArticle" v-model="isShowMore"></more-action>
 
+    <!-- 频道管理 -->
+    <channel v-model="isShowChannel"></channel>
   </div>
 </template>
 
@@ -51,11 +58,13 @@ import { mapState } from 'vuex'
 import { getArticle } from '@/api/article'
 import { setTimeout } from 'timers'
 import MoreAction from './compoents/more-action.vue'
+import Channel from './compoents/channel.vue'
 
 export default {
   name: 'HomeIndex',
   components: {
-    MoreAction
+    MoreAction,
+    Channel
   },
   data () {
     return {
@@ -65,7 +74,9 @@ export default {
       loading: false,
       finished: false,
       isLoading: false,
-      isShowMore: false
+      isShowMore: false,
+      isShowChannel: false,
+      currentArticle: null
     }
   },
   created () {
@@ -93,8 +104,13 @@ export default {
     }
   },
   methods: {
+    // 展示频道管理组件
+    showChannelModal () {
+      this.isShowChannel = true
+    },
     // 显示更多操作的对话框
-    showMoreActionDia () {
+    showMoreActionDia (currentArticle) {
+      this.currentArticle = currentArticle
       this.isShowMore = true
     },
     async loadChannels () {
@@ -209,5 +225,10 @@ export default {
 }
 .channel-tab /deep/ .van-tabs__content {
   margin-top: 184px;
+}
+// 调整右按钮的位置
+.channel-tab /deep/ .wap-nav {
+  position: fixed;
+  right: 0px;
 }
 </style>
